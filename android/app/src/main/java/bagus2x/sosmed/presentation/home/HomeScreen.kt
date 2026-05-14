@@ -101,16 +101,6 @@ fun HomeScreen(
             }
         }
     }
-    LaunchedEffect(Unit) {
-        snapshotFlow { feeds.loadState to feeds.itemSnapshotList }.collectLatest { (loadState, snapshotList) ->
-            if (loadState.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached) {
-                while (snapshotList.size == 0) {
-                    delay(1000)
-                    feeds.refresh()
-                }
-            }
-        }
-    }
     Scaffold(
         modifier = Modifier.statusBarsPadding(),
         topBar = {
@@ -188,7 +178,7 @@ fun HomeScreen(
             }
         }
         PullRefreshIndicator(
-            refreshing = true,
+            refreshing = feeds.loadState.refresh is LoadState.Loading,
             state = pullRefreshState,
             modifier = Modifier.align(Alignment.TopCenter)
         )
