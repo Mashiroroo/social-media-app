@@ -40,7 +40,7 @@ import bagus2x.sosmed.presentation.common.media.DeviceMedia
 import bagus2x.sosmed.presentation.feed.newfeed.components.*
 import bagus2x.sosmed.presentation.gallery.contract.MediaType
 import bagus2x.sosmed.presentation.gallery.contract.SelectMultipleMedia
-import bagus2x.sosmed.presentation.home.components.Permission
+import bagus2x.sosmed.presentation.home.components.Permissions
 import bagus2x.sosmed.presentation.imageeditor.launchImageEditor
 import bagus2x.sosmed.presentation.imageeditor.rememberImageEditorLauncher
 

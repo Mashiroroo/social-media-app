@@ -23,7 +23,7 @@ class ProfileSettingsViewModel @Inject constructor(
             _state.update { state -> state.copy(loading = true) }
             try {
                 signOutUseCase()
-                _state.update { state -> state.copy(loading = false) }
+                _state.update { state -> state.copy(loading = false, signedOut = true) }
             } catch (e: Exception) {
                 _state.update { state ->
                     state.copy(
@@ -35,4 +35,6 @@ class ProfileSettingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun snackbarConsumed() = _state.update { state -> state.copy(snackbar = "") }
 }
