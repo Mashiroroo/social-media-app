@@ -121,10 +121,16 @@ class NewFeedViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { state -> state.copy(feedState = state.feedState.copy(loading = true)) }
             try {
+                val medias = state.value.feedState.selectedMedias.mapNotNull { media ->
+                    runCatching { upload(media) }.getOrNull()
+                }
+                val language = runCatching {
+                    translator.sourceLanguage(text = state.value.feedState.description)
+                }.getOrNull()
                 createFeedUseCase(
                     description = state.value.feedState.description,
-                    medias = state.value.feedState.selectedMedias.map { upload(it) },
-                    language = translator.sourceLanguage(text = state.value.feedState.description)
+                    medias = medias,
+                    language = language
                 )
                 _state.update { state -> state.copy(feedState = state.feedState.copy(created = true)) }
             } catch (e: Exception) {

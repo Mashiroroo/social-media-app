@@ -164,6 +164,7 @@ class FeedDetailViewModel @Inject constructor(
     }
 
     fun favoriteFeed(feed: Feed) {
+        if (_state.value.feedState.loading) return
         viewModelScope.launch {
             _state.update { state -> state.copy(feedState = state.feedState.copy(loading = true)) }
             try {

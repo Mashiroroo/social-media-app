@@ -36,34 +36,20 @@ fun FeedActionButtons(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
-            modifier = Modifier
-                .animateContentSize()
-                .noRippleClickable(onClick = onFavoriteClicked),
+            modifier = Modifier.animateContentSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             FavoriteButton(
                 favorite = favorite,
                 onClick = onFavoriteClicked
             )
-            AnimatedContent(targetState = totalFavorites, transitionSpec = {
-                if (targetState > initialState) {
-                    slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
-                } else {
-                    slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
-                }.using(
-                    SizeTransform(clip = false)
+            if (totalFavorites > 0) {
+                Text(
+                    text = CompactDecimalFormat.getInstance(
+                        Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT
+                    ).format(totalFavorites),
+                    style = MaterialTheme.typography.caption,
                 )
-            }) { favorite ->
-                if (totalFavorites > 0) {
-                    Text(
-                        text = rememberSaveable {
-                            CompactDecimalFormat.getInstance(
-                                Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT
-                            ).format(favorite)
-                        },
-                        style = MaterialTheme.typography.caption,
-                    )
-                }
             }
         }
         Row(

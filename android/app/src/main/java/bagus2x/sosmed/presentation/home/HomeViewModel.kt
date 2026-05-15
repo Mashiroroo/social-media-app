@@ -50,6 +50,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun favoriteFeed(feed: Feed) {
+        if (_state.value.loading) return
         viewModelScope.launch {
             _state.update { state -> state.copy(loading = true) }
             try {
