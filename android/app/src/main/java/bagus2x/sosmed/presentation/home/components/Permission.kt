@@ -12,7 +12,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import bagus2x.sosmed.R
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 
@@ -33,6 +35,52 @@ inline fun Permission(
         return
     }
     val textToShow = if (state.status.shouldShowRationale) rationaleText else permissionText
+    PermissionScreen(
+        title = title,
+        textToShow = textToShow,
+        onRequest = state::launchPermissionRequest,
+        onSkip = skipp,
+        modifier = modifier,
+        content = content
+    )
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+inline fun Permissions(
+    permissions: List<String>,
+    title: String,
+    rationaleText: String,
+    permissionText: String,
+    modifier: Modifier = Modifier,
+    noinline skipp: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    val state = rememberMultiplePermissionsState(permissions)
+    if (state.allPermissionsGranted) {
+        content()
+        return
+    }
+    val textToShow = if (state.shouldShowRationale) rationaleText else permissionText
+    PermissionScreen(
+        title = title,
+        textToShow = textToShow,
+        onRequest = state::launchMultiplePermissionRequest,
+        onSkip = skipp,
+        modifier = modifier,
+        content = content
+    )
+}
+
+@Composable
+fun PermissionScreen(
+    title: String,
+    textToShow: String,
+    onRequest: () -> Unit,
+    onSkip: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
     Scaffold(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary,
@@ -40,7 +88,7 @@ inline fun Permission(
             TopAppBar(
                 elevation = 0.dp
             ) {
-                IconButton(onClick = skipp) {
+                IconButton(onClick = onSkip) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close_outlined),
                         contentDescription = null
@@ -74,7 +122,7 @@ inline fun Permission(
             )
             Spacer(modifier = Modifier.height(180.dp))
             Button(
-                onClick = state::launchPermissionRequest,
+                onClick = onRequest,
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.White,
                     contentColor = MaterialTheme.colors.primary
@@ -84,7 +132,7 @@ inline fun Permission(
             }
             Spacer(modifier = Modifier.height(16.dp))
             TextButton(
-                onClick = skipp,
+                onClick = onSkip,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color.White
                 )

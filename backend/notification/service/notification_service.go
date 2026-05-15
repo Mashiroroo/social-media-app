@@ -189,7 +189,7 @@ func (n *NotificationService) Get(ctx context.Context, page models.Page) ([]mode
 			}
 
 			notificationRes.Issuer = &models.Profile{
-				Id:       notification.Id,
+				Id:       notification.Issuer.Id,
 				Name:     notification.Issuer.Name,
 				Username: notification.Issuer.Username,
 				Photo:    notification.Issuer.Photo,
@@ -208,7 +208,7 @@ func (n *NotificationService) Get(ctx context.Context, page models.Page) ([]mode
 			}
 
 			notificationRes.Issuer = &models.Profile{
-				Id:       notification.Id,
+				Id:       notification.Issuer.Id,
 				Name:     notification.Issuer.Name,
 				Username: notification.Issuer.Username,
 				Photo:    notification.Issuer.Photo,
@@ -228,7 +228,7 @@ func (n *NotificationService) Get(ctx context.Context, page models.Page) ([]mode
 			}
 
 			notificationRes.Issuer = &models.Profile{
-				Id:       notification.Id,
+				Id:       notification.Issuer.Id,
 				Name:     notification.Issuer.Name,
 				Username: notification.Issuer.Username,
 				Photo:    notification.Issuer.Photo,
@@ -241,7 +241,7 @@ func (n *NotificationService) Get(ctx context.Context, page models.Page) ([]mode
 		}
 		if notification.Type == models.UserFollowing {
 			notificationRes.Issuer = &models.Profile{
-				Id:       notification.Id,
+				Id:       notification.Issuer.Id,
 				Name:     notification.Issuer.Name,
 				Username: notification.Issuer.Username,
 				Photo:    notification.Issuer.Photo,

@@ -1,6 +1,7 @@
 package bagus2x.sosmed.presentation.feed.newfeed
 
 import android.Manifest
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -66,8 +67,13 @@ fun NewFeedScreen(
     }
 
     val context = LocalContext.current
-    Permission(
-        permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+    val mediaPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        listOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+    } else {
+        listOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+    Permissions(
+        permissions = mediaPermissions,
         title = stringResource(R.string.text_browse_gallery),
         permissionText = stringResource(R.string.text_gallery_require_permission),
         rationaleText = stringResource(R.string.text_gallery_rationale),

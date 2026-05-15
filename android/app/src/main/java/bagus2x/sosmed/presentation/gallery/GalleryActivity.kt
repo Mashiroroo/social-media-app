@@ -2,6 +2,7 @@ package bagus2x.sosmed.presentation.gallery
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,7 +22,7 @@ import bagus2x.sosmed.presentation.common.parcelable
 import bagus2x.sosmed.presentation.common.parcelableArrayList
 import bagus2x.sosmed.presentation.common.theme.MedsosTheme
 import bagus2x.sosmed.presentation.gallery.contract.MediaType
-import bagus2x.sosmed.presentation.home.components.Permission
+import bagus2x.sosmed.presentation.home.components.Permissions
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,8 +50,13 @@ class GalleryActivity : ComponentActivity() {
                 LocalProvider {
                     val deviceMedias = viewModel.deviceMedias.collectAsLazyPagingItems()
                     val state by viewModel.state.collectAsStateWithLifecycle()
-                    Permission(
-                        permission = Manifest.permission.READ_EXTERNAL_STORAGE,
+                    val mediaPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        listOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+                    } else {
+                        listOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                    Permissions(
+                        permissions = mediaPermissions,
                         title = stringResource(R.string.text_browse_gallery),
                         permissionText = stringResource(R.string.text_gallery_require_permission),
                         rationaleText = stringResource(R.string.text_gallery_rationale),
