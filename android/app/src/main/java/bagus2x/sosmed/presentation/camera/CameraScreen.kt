@@ -11,12 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import bagus2x.sosmed.presentation.camera.components.CameraSurface
 import bagus2x.sosmed.presentation.common.components.RequiresPermission
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen(
     result: (Uri?) -> Unit

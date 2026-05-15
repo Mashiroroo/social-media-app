@@ -1,5 +1,9 @@
 package bagus2x.sosmed.presentation.common.components
 
+import android.app.Activity
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -10,32 +14,41 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.MultiplePermissionsState
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RequiresPermission(
     modifier: Modifier = Modifier,
     permissions: List<String>,
-    deniedContent: (@Composable (MultiplePermissionsState) -> Unit)? = null,
-    grantedContent: @Composable (MultiplePermissionsState) -> Unit,
+    deniedContent: (@Composable () -> Unit)? = null,
+    grantedContent: @Composable () -> Unit,
 ) {
-    val permissionState = rememberMultiplePermissionsState(permissions)
-    AnimatedContent(targetState = permissionState.allPermissionsGranted) { granted ->
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { _ -> }
+
+    val allGranted = permissions.all {
+        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    AnimatedContent(targetState = allGranted) { granted ->
         if (granted) {
-            grantedContent(permissionState)
+            grantedContent()
         } else {
             if (deniedContent != null) {
-                deniedContent(permissionState)
+                deniedContent()
             } else {
                 Column(
                     modifier = modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Button(onClick = { permissionState.launchMultiplePermissionRequest() }) {
+                    Button(onClick = { launcher.launch(permissions.toTypedArray()) }) {
                         Text(text = "Request Permissions")
                     }
                 }
