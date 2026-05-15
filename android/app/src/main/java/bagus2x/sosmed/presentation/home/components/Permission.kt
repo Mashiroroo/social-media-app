@@ -12,7 +12,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import bagus2x.sosmed.R
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
@@ -20,13 +19,13 @@ import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-inline fun Permission(
+fun Permission(
     permission: String,
     title: String,
     rationaleText: String,
     permissionText: String,
     modifier: Modifier = Modifier,
-    noinline skipp: () -> Unit,
+    skipp: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val state = rememberPermissionState(permission)
@@ -47,13 +46,13 @@ inline fun Permission(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-inline fun Permissions(
+fun Permissions(
     permissions: List<String>,
     title: String,
     rationaleText: String,
     permissionText: String,
     modifier: Modifier = Modifier,
-    noinline skipp: () -> Unit,
+    skipp: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val state = rememberMultiplePermissionsState(permissions)
