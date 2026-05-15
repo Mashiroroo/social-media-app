@@ -32,13 +32,19 @@ func (r *UploaderRepository) Upload(ctx context.Context, file models.File[multip
 	}
 
 	result, err := r.cld.Upload.Upload(ctx, file.Content, uploader.UploadParams{PublicID: publicId, ResourceType: string(file.Type)})
+	logrus.Infof("Cloudinary upload: SecureURL=%q, URL=%q, PublicID=%q, DisplayName=%q, err=%v", result.SecureURL, result.URL, result.PublicID, result.DisplayName, err)
 	if err != nil {
 		logrus.Error(err)
 		return models.File[string]{}, err
 	}
 
+	contentUrl := result.SecureURL
+	if contentUrl == "" {
+		contentUrl = result.URL
+	}
+
 	fileResult := models.File[string]{
-		Content: result.SecureURL,
+		Content: contentUrl,
 		Name:    result.DisplayName,
 		Size:    file.Size,
 		Type:    file.Type,
