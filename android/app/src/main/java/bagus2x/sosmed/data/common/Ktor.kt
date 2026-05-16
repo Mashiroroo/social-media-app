@@ -14,6 +14,7 @@ import io.ktor.client.plugins.websocket.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 
 suspend inline fun <T> ktor(client: HttpClient, block: HttpClient.() -> T): T {
     return try {
@@ -25,6 +26,9 @@ suspend inline fun <T> ktor(client: HttpClient, block: HttpClient.() -> T): T {
     } catch (e: ServerResponseException) {
         val error = e.response.body<ErrorDTO>()
         error(error.message)
+    } catch (e: Exception) {
+        Timber.e(e, "Ktor network error")
+        error(e.message ?: "Network error")
     }
 }
 
