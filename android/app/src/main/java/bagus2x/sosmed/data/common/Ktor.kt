@@ -61,6 +61,10 @@ fun HttpClient(authLocalDataSource: AuthLocalDataSource) = HttpClient(CIO) {
                 val (accessToken, _, _) = token ?: return@loadTokens null
                 BearerTokens(accessToken, accessToken)
             }
+            refreshTokens {
+                authLocalDataSource.clear()
+                null
+            }
         }
     }
 }
