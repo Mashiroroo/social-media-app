@@ -367,12 +367,24 @@ func (s *UserService) Update(ctx context.Context, req *models.UpdateUserReq) (mo
 		user.Password = req.Password.String
 	}
 
-	user.Photo = req.Photo
-	user.Header = req.Header
-	user.Bio = req.Bio
-	user.Location = req.Location
-	user.Website = req.Website
-	user.DateOfBirth = req.DateOfBirth
+	if req.Photo.Valid {
+		user.Photo = req.Photo
+	}
+	if req.Header.Valid {
+		user.Header = req.Header
+	}
+	if req.Bio.Valid {
+		user.Bio = req.Bio
+	}
+	if req.Location.Valid {
+		user.Location = req.Location
+	}
+	if req.Website.Valid {
+		user.Website = req.Website
+	}
+	if req.DateOfBirth.Valid {
+		user.DateOfBirth = req.DateOfBirth
+	}
 
 	err = s.userRepository.Update(ctx, &user)
 	if err != nil {
