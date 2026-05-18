@@ -26,6 +26,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -117,17 +118,20 @@ fun EditProfileScreen(
     saveAndUpdate: () -> Unit,
 ) {
     val state = stateProvider()
+    val scaffoldState = rememberScaffoldState()
     LaunchedEffect(Unit) {
         snapshotFlow { stateProvider() }.collectLatest { state ->
             if (state.updated) {
                 navigateUp()
             }
             if (state.snackbar.isNotBlank()) {
+                scaffoldState.snackbarHostState.showSnackbar(state.snackbar)
                 consumeSnackbar()
             }
         }
     }
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 navigationIcon = {
